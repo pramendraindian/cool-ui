@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400' rel='stylesheet' type='text/css'>
+
+<script>
+
+
+
+/*XMLHttpRequest.readyState
+Value	State				Description
+0		UNSENT				Client has been created. open() not called yet.
+1		OPENED				open() has been called.
+2		HEADERS_RECEIVED	send() has been called, and headers and status are available.
+3		LOADING				Downloading; responseText holds partial data.
+4		DONE				The operation is complete.
+*/
+
+
+
+
+function ComposeRequest()
+{
+	var request = new XMLHttpRequest();
+	//////////////////////////////////////////////////////////////////
+	///REGISTER TO TRACK READY STATE CHANGE
+	/////////////////////////////////////////////////////////////////
+		request.onreadystatechange=function(e) {
+		console.log(request.readyState);
+    	if(request.readyState == 2 && request.status == 200) { // 2- 
+			console.log('response good to go and opened stream');
+    	}
+    	else if(request.readyState == 3) { // 3- In progress
+    		console.log('response inprogress');
+   		}
+    	else if(request.readyState == 4) { //4- DONE with request
+			console.log('response done');
+    	}
+    };
+	////////////////////////////////////////////////////
+	////Register for PROGRESS PERCENTAGE	
+	///////////////////////////////////////////////////
+	request.onprogress=function(e) {
+			console.log('progress percentage');
+			console.log(e.loaded);
+			console.log(e.total);
+    	var percent_complete = (e.loaded / e.total)*100;
+		console.log(percent_complete+"%");
+    	document.querySelector('#download-progress').style.width = percent_complete + '%';
+    };
+	//////////////////////////////////////////////////////////
+	/// REGISTER FOR ONLOAD END TO VALIDATE http status codes
+	////////////////////////////////////////////////////////
+	request.onloadend = function() {
+		console.log( 'response fully loaded, verify http status codes now');
+		console.log( 'status code='+request.status);
+    	if(request.status == 404) {
+			console.log('404 Error');
+		}
+		else{
+			// log other info
+			
+		}
+	};
+	///////////////////////////////////////////////////////////
+    request.responseType = 'blob';
+    request.open('get', 'img.jpeg'); 
+    request.send(); 
+};
+</script>
+
+</body>
+</html>
